@@ -18,16 +18,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2GB-yf-StR">
-                                <rect key="frame" x="272" y="285" width="56" height="30"/>
+                                <rect key="frame" x="272" y="200" width="56" height="30"/>
                                 <state key="normal" title="Find Me">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="6E9-1y-cyD">
-                                <rect key="frame" x="16" y="20" width="568" height="200"/>
+                                <rect key="frame" x="16" y="20" width="568" height="160"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="200" id="LHo-gn-KT1"/>
+                                    <constraint firstAttribute="height" constant="160" id="LHo-gn-KT1"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="JTZ-7L-S7S">
                                     <size key="itemSize" width="50" height="100"/>
@@ -56,8 +56,8 @@
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="2GB-yf-StR" secondAttribute="centerX" id="2Tx-w3-Q6q"/>
                             <constraint firstItem="6E9-1y-cyD" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="4W6-YT-qJb"/>
-                            <constraint firstAttribute="centerY" secondItem="2GB-yf-StR" secondAttribute="centerY" id="Apc-N7-2nL"/>
                             <constraint firstItem="6E9-1y-cyD" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="OBi-FJ-Qhh"/>
+                            <constraint firstItem="2GB-yf-StR" firstAttribute="top" secondItem="6E9-1y-cyD" secondAttribute="bottom" constant="20" id="ScF-dt-LBX"/>
                             <constraint firstItem="6E9-1y-cyD" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="smM-WS-Sbx"/>
                         </constraints>
                     </view>

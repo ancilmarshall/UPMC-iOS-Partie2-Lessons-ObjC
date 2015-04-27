@@ -14,6 +14,8 @@
 		1DEB8B261AEE484500B5DA16 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1DEB8B251AEE484500B5DA16 /* Images.xcassets */; };
 		1DEB8B291AEE484500B5DA16 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DEB8B271AEE484500B5DA16 /* LaunchScreen.xib */; };
 		1DEB8B351AEE484500B5DA16 /* TrouveMoiTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DEB8B341AEE484500B5DA16 /* TrouveMoiTests.m */; };
+		1DEB8B411AEEA53600B5DA16 /* FindMeCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DEB8B3F1AEEA53600B5DA16 /* FindMeCollectionViewCell.m */; };
+		1DEB8B421AEEA53600B5DA16 /* FindMeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DEB8B401AEEA53600B5DA16 /* FindMeCollectionViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +42,9 @@
 		1DEB8B2E1AEE484500B5DA16 /* TrouveMoiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrouveMoiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DEB8B331AEE484500B5DA16 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1DEB8B341AEE484500B5DA16 /* TrouveMoiTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TrouveMoiTests.m; sourceTree = "<group>"; };
+		1DEB8B3E1AEEA53600B5DA16 /* FindMeCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindMeCollectionViewCell.h; sourceTree = "<group>"; };
+		1DEB8B3F1AEEA53600B5DA16 /* FindMeCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindMeCollectionViewCell.m; sourceTree = "<group>"; };
+		1DEB8B401AEEA53600B5DA16 /* FindMeCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FindMeCollectionViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +90,9 @@
 				1DEB8B1D1AEE484500B5DA16 /* AppDelegate.m */,
 				1DEB8B1F1AEE484500B5DA16 /* FindMeViewController.h */,
 				1DEB8B201AEE484500B5DA16 /* FindMeViewController.m */,
+				1DEB8B3E1AEEA53600B5DA16 /* FindMeCollectionViewCell.h */,
+				1DEB8B3F1AEEA53600B5DA16 /* FindMeCollectionViewCell.m */,
+				1DEB8B401AEEA53600B5DA16 /* FindMeCollectionViewCell.xib */,
 				1DEB8B221AEE484500B5DA16 /* Main.storyboard */,
 				1DEB8B251AEE484500B5DA16 /* Images.xcassets */,
 				1DEB8B271AEE484500B5DA16 /* LaunchScreen.xib */,
@@ -202,6 +210,7 @@
 				1DEB8B241AEE484500B5DA16 /* Main.storyboard in Resources */,
 				1DEB8B291AEE484500B5DA16 /* LaunchScreen.xib in Resources */,
 				1DEB8B261AEE484500B5DA16 /* Images.xcassets in Resources */,
+				1DEB8B421AEEA53600B5DA16 /* FindMeCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,6 +231,7 @@
 				1DEB8B211AEE484500B5DA16 /* FindMeViewController.m in Sources */,
 				1DEB8B1E1AEE484500B5DA16 /* AppDelegate.m in Sources */,
 				1DEB8B1B1AEE484500B5DA16 /* main.m in Sources */,
+				1DEB8B411AEEA53600B5DA16 /* FindMeCollectionViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

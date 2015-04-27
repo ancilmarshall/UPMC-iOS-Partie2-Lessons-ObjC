@@ -7,6 +7,7 @@
 //
 
 #import "FindMeViewController.h"
+#import "FindMeCollectionViewCell.h"
 
 static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
 
@@ -19,14 +20,15 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    /*  NOTE - Dropped in a UICollectionView on this controller's view
+    /*  NOTE - Dropped in a UICollectionView on this controller's view.
      *  Flow Layout is set in the UICollectionView's properties in the IB
-     *  Could set the delegates in the IB or programmatically. I tried both
+     *  Could set the delegates in the IB or programmatically. I tried both, left in IB option
      */
-
-    // Register cell classes (collection views are made up of cells)
-    [self.collectionView registerClass:[UICollectionViewCell class]
-            forCellWithReuseIdentifier:kCollectionViewCellReuseIdentifier];
+    
+    // NOTE: Must now use the registerNib, not the registerClass since I am
+    // using a nib file to define the cell. (Ouch!!!)
+    [self.collectionView registerNib:[UINib nibWithNibName:@"FindMeCollectionViewCell" bundle:nil]
+              forCellWithReuseIdentifier:kCollectionViewCellReuseIdentifier];
     
     // Set the delegates. DataSource for the data, delegate for the flow layout
     // self.collectionView.dataSource = self;
@@ -42,22 +44,20 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section {
-    return [[FindMeViewController geoLocationDataLabels] count];
+    return [[self geoLocationDataLabels] count];
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+- (FindMeCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    UICollectionViewCell *cell =
+    FindMeCollectionViewCell *cell =
     [collectionView dequeueReusableCellWithReuseIdentifier:kCollectionViewCellReuseIdentifier
                                               forIndexPath:indexPath];
     NSAssert( cell != nil, @"Expected to have a UICollectionViewCell");
     //bc collection views always guarantees that a properly allocated cell is in
     // the queue, unlike for tableviews
-    
-    //cell.bounds = CGRectMake(0.0,0.0,self.view.frame.size.width/2.0,100.0);
-    cell.backgroundColor = [self getColor:indexPath.item];
-    
+
+    cell.title.text = [self geoLocationDataLabels][indexPath.item];
     return cell;
 }
 
@@ -77,26 +77,13 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
 
 # pragma mark - Helpers
 
--(UIColor*)getColor:(NSInteger)index;
-{
-    NSArray* colors = @[
-                        [UIColor redColor],
-                        [UIColor greenColor],
-                        [UIColor blueColor],
-                        [UIColor yellowColor]];
-    return colors[index];
-    
-    
-}
-
-+(NSArray*)geoLocationDataLabels;
+-(NSArray*)geoLocationDataLabels;
 {
     
     return @[ NSLocalizedString(@"Latitude",nil),
               NSLocalizedString(@"Longitude", nil),
               NSLocalizedString(@"Altitude", nil),
               NSLocalizedString(@"Speed", nil)];
-    
 }
 
 #pragma mark - Rotation support
@@ -106,7 +93,5 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [self.collectionView reloadData]; // just update the UI here
 }
-
-
 
 @end
