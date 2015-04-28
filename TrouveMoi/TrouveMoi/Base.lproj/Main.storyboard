@@ -17,20 +17,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2GB-yf-StR">
-                                <rect key="frame" x="272" y="200" width="56" height="30"/>
-                                <state key="normal" title="Find Me">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="6E9-1y-cyD">
-                                <rect key="frame" x="16" y="20" width="568" height="160"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <rect key="frame" x="16" y="66" width="568" height="100"/>
+                                <color key="backgroundColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="160" id="LHo-gn-KT1"/>
+                                    <constraint firstAttribute="height" constant="100" id="LHo-gn-KT1"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="JTZ-7L-S7S">
-                                    <size key="itemSize" width="50" height="100"/>
+                                    <size key="itemSize" width="50" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -40,7 +34,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="100"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -51,22 +45,88 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="3ol-eD-sqd"/>
                                 </connections>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2GB-yf-StR">
+                                <rect key="frame" x="272" y="28" width="56" height="30"/>
+                                <state key="normal" title="Find Me">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="findLocation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CVp-QJ-Hxu"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time Location Data" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="saJ-xd-KYy">
+                                <rect key="frame" x="225" y="174" width="150" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Last Updated Location Data" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Os2-lT-w5y">
+                                <rect key="frame" x="36" y="211" width="528" height="80"/>
+                                <color key="backgroundColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="iSi-BJ-Dem"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5Zu-bq-pKK">
+                                <rect key="frame" x="16" y="299" width="568" height="100"/>
+                                <color key="backgroundColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="P1O-7N-AQh"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="qAM-iU-dRs">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CollectionViewCell" id="mpd-Xa-AOK">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="ZHg-Oi-MY8"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="3Nt-xi-e7M"/>
+                                </connections>
+                            </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="2GB-yf-StR" secondAttribute="centerX" id="2Tx-w3-Q6q"/>
                             <constraint firstItem="6E9-1y-cyD" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="4W6-YT-qJb"/>
-                            <constraint firstItem="6E9-1y-cyD" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="OBi-FJ-Qhh"/>
-                            <constraint firstItem="2GB-yf-StR" firstAttribute="top" secondItem="6E9-1y-cyD" secondAttribute="bottom" constant="20" id="ScF-dt-LBX"/>
+                            <constraint firstItem="Os2-lT-w5y" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="20" id="7dA-Yi-oQX"/>
+                            <constraint firstItem="2GB-yf-StR" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="9EO-3g-syG"/>
+                            <constraint firstItem="Os2-lT-w5y" firstAttribute="top" secondItem="saJ-xd-KYy" secondAttribute="bottom" constant="16" id="FFa-HI-TLJ"/>
+                            <constraint firstItem="5Zu-bq-pKK" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="I13-PR-eXq"/>
+                            <constraint firstItem="saJ-xd-KYy" firstAttribute="top" secondItem="6E9-1y-cyD" secondAttribute="bottom" constant="8" id="Neh-n9-78l"/>
+                            <constraint firstAttribute="centerX" secondItem="saJ-xd-KYy" secondAttribute="centerX" id="Sqo-Cj-BEq"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Os2-lT-w5y" secondAttribute="trailing" constant="20" id="VEv-xa-TuD"/>
+                            <constraint firstItem="5Zu-bq-pKK" firstAttribute="top" secondItem="Os2-lT-w5y" secondAttribute="bottom" constant="8" id="YPN-hd-QIs"/>
+                            <constraint firstAttribute="centerX" secondItem="Os2-lT-w5y" secondAttribute="centerX" id="flO-Ta-m7o"/>
+                            <constraint firstItem="6E9-1y-cyD" firstAttribute="top" secondItem="2GB-yf-StR" secondAttribute="bottom" constant="8" id="fuh-q7-ize"/>
+                            <constraint firstItem="5Zu-bq-pKK" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="nDZ-i9-rP1"/>
                             <constraint firstItem="6E9-1y-cyD" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="smM-WS-Sbx"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="collectionView" destination="6E9-1y-cyD" id="Hr1-ok-WP3"/>
+                        <outlet property="findMeButton" destination="2GB-yf-StR" id="ePs-VO-GaT"/>
+                        <outlet property="localisationData" destination="Os2-lT-w5y" id="xNu-7u-52z"/>
+                        <outlet property="locationDataBottomCollectionView" destination="5Zu-bq-pKK" id="mTu-9C-fPp"/>
+                        <outlet property="locationDataTopCollectionView" destination="6E9-1y-cyD" id="zH0-iu-me9"/>
+                        <outlet property="timeLocationData" destination="saJ-xd-KYy" id="udG-0Y-3vp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="468" y="387"/>
         </scene>
     </scenes>
 </document>
