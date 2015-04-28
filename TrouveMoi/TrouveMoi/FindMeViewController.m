@@ -22,6 +22,7 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
 @property (weak, nonatomic) IBOutlet UITextView *localisationData;
 
 @property (nonatomic,strong) CLLocationManager* locationManager;
+@property (nonatomic,strong) CLLocation* currentLocation;
 @property (nonatomic,assign) BOOL updatingLocation;
 @end
 
@@ -44,10 +45,9 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
     self.locationDataBottomCollectionView.backgroundColor = [UIColor whiteColor];
     self.localisationData.backgroundColor = [UIColor whiteColor];
     
-    [self resetLocationUpdates];
-    
+    //reset the state and the GUI
+    [self stopLocationUpdates];
 }
-
 
 #pragma mark - Location Services
 //lazy initialization of the location manager
@@ -65,7 +65,7 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
     NSAssert(self.findMeButton == sender,@"Expected event source to be the findMe button");
     
     if (self.updatingLocation == YES){
-        [self resetLocationUpdates];
+        [self stopLocationUpdates];
         return;
     }
     
@@ -97,6 +97,15 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
     NSAssert(manager == self.locationManager,NSLocalizedString(@"Expected event's manager to be self.locationManager",nil));
     
     switch (status) {
+            
+        case kCLAuthorizationStatusDenied:
+        case kCLAuthorizationStatusRestricted:
+            return;
+        
+        case kCLAuthorizationStatusNotDetermined:
+            [self.locationManager requestWhenInUseAuthorization];
+            break;
+            
         case kCLAuthorizationStatusAuthorizedWhenInUse:
             [self startUpdatingLocation];
             break;
@@ -110,15 +119,34 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
 {
     [self.locationManager startUpdatingLocation];
     self.updatingLocation = YES;
-    self.findMeButton.titleLabel.text = NSLocalizedString(@"Stop...", nil);
+    [self.findMeButton setTitle:NSLocalizedString(@"Stop...", nil) forState:UIControlStateNormal];
 }
 
--(void)resetLocationUpdates;
+-(void)stopLocationUpdates;
 {
     [self.locationManager stopUpdatingLocation];
     self.updatingLocation = NO;
-    self.findMeButton.titleLabel.text = NSLocalizedString(@"Find me", nil);
+    [self.findMeButton setTitle:NSLocalizedString(@"Find Me", nil) forState:UIControlStateNormal];
+    self.locationManager = nil;
+    self.currentLocation = nil;
 }
+
+
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations;
+{
+    self.currentLocation = locations[0];
+    if (self.currentLocation != nil){
+        
+        [self.locationDataTopCollectionView reloadData];
+        [self.locationDataBottomCollectionView reloadData];
+        self.localisationData.text = self.currentLocation.description;
+        
+        
+    }
+    
+    
+}
+
 
 # pragma mark - Collection View Data Source
 
@@ -185,11 +213,22 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
 
 -(NSArray*)topLocationDataLabels;
 {
+ 
+    if (self.currentLocation == nil){
     
-    return @[ NSLocalizedString(@"Lat:",nil),
-              NSLocalizedString(@"Long:", nil),
-              NSLocalizedString(@"Alt:", nil),
-              NSLocalizedString(@"Speed:", nil)];
+        return @[ NSLocalizedString(@"Lat:",nil),
+                  NSLocalizedString(@"Long:", nil),
+                  NSLocalizedString(@"Alt:", nil),
+                  NSLocalizedString(@"Speed:", nil)];
+    }
+    
+    NSMutableArray* dataLabelsArray = [NSMutableArray new];
+    [dataLabelsArray addObject:[NSString stringWithFormat:@"Lat: %.3f",self.currentLocation.coordinate.latitude]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:@"Long: %.3f",self.currentLocation.coordinate.longitude]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:@"Alt: %.3f",self.currentLocation.altitude]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:@"Speed: %.3f",self.currentLocation.speed]];
+    
+    return [NSArray arrayWithArray:dataLabelsArray];;
 }
 
 -(NSArray*)bottomLocationDataLabels;
