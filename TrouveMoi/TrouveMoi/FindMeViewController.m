@@ -23,7 +23,11 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
 
 @property (nonatomic,strong) CLLocationManager* locationManager;
 @property (nonatomic,strong) CLLocation* currentLocation;
+@property (nonatomic,strong) CLHeading* currentHeading;
 @property (nonatomic,assign) BOOL updatingLocation;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *localisationDataHeight;
+@property (nonatomic,strong) NSDateFormatter* dateFormatter;
 @end
 
 @implementation FindMeViewController
@@ -45,11 +49,15 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
     self.locationDataBottomCollectionView.backgroundColor = [UIColor whiteColor];
     self.localisationData.backgroundColor = [UIColor whiteColor];
     
-    //reset the state and the GUI
+    //reset the state and call [self resetUI]
     [self stopLocationUpdates];
+    
+    self.dateFormatter = [NSDateFormatter new];
+    self.dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+    self.dateFormatter.timeStyle = NSDateFormatterMediumStyle;
+    
 }
 
-#pragma mark - Location Services
 //lazy initialization of the location manager
 -(CLLocationManager*)locationManager;
 {
@@ -59,6 +67,8 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
     }
     return _locationManager;
 }
+
+#pragma mark - Location Services
 
 - (IBAction)findLocation:(UIButton *)sender {
     
@@ -104,11 +114,11 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
         
         case kCLAuthorizationStatusNotDetermined:
             [self.locationManager requestWhenInUseAuthorization];
-            break;
+            return;
             
         case kCLAuthorizationStatusAuthorizedWhenInUse:
             [self startUpdatingLocation];
-            break;
+            return;
             
         default:
             break;
@@ -119,34 +129,87 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
 {
     [self.locationManager startUpdatingLocation];
     self.updatingLocation = YES;
+    
+    if ([CLLocationManager headingAvailable]){
+        [self.locationManager startUpdatingHeading];
+    }
+    
+    self.localisationData.text = NSLocalizedString(@"Searching ...", nil);
     [self.findMeButton setTitle:NSLocalizedString(@"Stop...", nil) forState:UIControlStateNormal];
 }
 
 -(void)stopLocationUpdates;
 {
     [self.locationManager stopUpdatingLocation];
+    
+    if ([CLLocationManager headingAvailable]) {
+        [self.locationManager stopUpdatingHeading];
+    }
+    
     self.updatingLocation = NO;
-    [self.findMeButton setTitle:NSLocalizedString(@"Find Me", nil) forState:UIControlStateNormal];
     self.locationManager = nil;
     self.currentLocation = nil;
+    self.currentHeading = nil;
+
+    [self.findMeButton setTitle:NSLocalizedString(@"Find Me", nil) forState:UIControlStateNormal];
+    
+    [self resetUI];
 }
 
+// call with the default size argument as the view's size
+-(void)resetUI;
+{
+    [self resetUIForSize:self.view.frame.size];
+}
+
+// size is an optional parameter
+-(void)resetUIForSize:(CGSize)size;
+{
+    [self.locationDataBottomCollectionView reloadData];
+    [self.locationDataTopCollectionView reloadData];
+    
+    if (self.updatingLocation){
+        self.localisationData.text = self.currentLocation.description;
+        self.timeLocationData.text = [self.dateFormatter stringFromDate:self.currentLocation.timestamp];
+    }
+    else{
+        self.localisationData.text = NSLocalizedString(@"Location data details",nil);
+        self.timeLocationData.text = NSLocalizedString(@"Location date", nil);
+    }
+    
+    if ([self isPortrait:size]){
+        self.localisationDataHeight.constant = 100;
+    }
+    else {
+        self.localisationDataHeight.constant = 50;
+    }
+
+}
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations;
 {
     self.currentLocation = locations[0];
     if (self.currentLocation != nil){
         
-        [self.locationDataTopCollectionView reloadData];
-        [self.locationDataBottomCollectionView reloadData];
-        self.localisationData.text = self.currentLocation.description;
-        
-        
+        [self resetUI];
     }
-    
-    
 }
 
+-(void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading;
+{
+    self.currentHeading = newHeading;
+    if (self.currentHeading != nil){
+        [self resetUI];
+    }
+}
+
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error;
+{
+    [self resetUI];
+    NSString* text = NSLocalizedString(@"Error getting localisation data", nil);
+    [text stringByAppendingString:error.description];
+    self.localisationData.text = text;
+}
 
 # pragma mark - Collection View Data Source
 
@@ -208,7 +271,6 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
     return size;
 }
 
-
 # pragma mark - Localisation Data Label Text Inputs
 
 -(NSArray*)topLocationDataLabels;
@@ -216,10 +278,10 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
  
     if (self.currentLocation == nil){
     
-        return @[ NSLocalizedString(@"Lat:",nil),
-                  NSLocalizedString(@"Long:", nil),
-                  NSLocalizedString(@"Alt:", nil),
-                  NSLocalizedString(@"Speed:", nil)];
+        return @[ NSLocalizedString(@"Lat: ---",nil),
+                  NSLocalizedString(@"Long: ---", nil),
+                  NSLocalizedString(@"Alt: ---", nil),
+                  NSLocalizedString(@"Speed: ---", nil)];
     }
     
     NSMutableArray* dataLabelsArray = [NSMutableArray new];
@@ -233,10 +295,22 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
 
 -(NSArray*)bottomLocationDataLabels;
 {
-    return @[ NSLocalizedString(@"Heading T:", nil),
-              NSLocalizedString(@"Heading M:",nil),
-              NSLocalizedString(@"x-comp", nil),
-              NSLocalizedString(@"y-comp", nil)];
+    
+    if (self.currentHeading == nil){
+        return @[ NSLocalizedString(@"Heading T: ---", nil),
+                  NSLocalizedString(@"Heading M: ---",nil),
+                  NSLocalizedString(@"x-comp: ---", nil),
+                  NSLocalizedString(@"y-comp: ---", nil)];
+    }
+    
+    NSMutableArray* dataLabelsArray = [NSMutableArray new];
+    [dataLabelsArray addObject:[NSString stringWithFormat:@"Heading T:%.3f",self.currentHeading.trueHeading]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:@"Heading M: %.3f",self.currentHeading.magneticHeading]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:@"x-comp: %.3f",self.currentHeading.x]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:@"y-comp: %.3f",self.currentHeading.y]];
+    
+    return [NSArray arrayWithArray:dataLabelsArray];
+    
 }
 
 #pragma mark - Rotation support
@@ -244,8 +318,16 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
 -(void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    [self.locationDataTopCollectionView reloadData]; // just update the UI here
-    [self.locationDataBottomCollectionView reloadData];
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        [self resetUIForSize:size];
+    } completion:nil];
 }
+
+-(BOOL)isPortrait:(CGSize)size;
+{
+    return size.height > size.width;
+}
+
 
 @end

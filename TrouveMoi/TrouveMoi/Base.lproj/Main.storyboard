@@ -119,6 +119,7 @@
                     <connections>
                         <outlet property="findMeButton" destination="2GB-yf-StR" id="ePs-VO-GaT"/>
                         <outlet property="localisationData" destination="Os2-lT-w5y" id="xNu-7u-52z"/>
+                        <outlet property="localisationDataHeight" destination="iSi-BJ-Dem" id="hqm-AZ-gAG"/>
                         <outlet property="locationDataBottomCollectionView" destination="5Zu-bq-pKK" id="mTu-9C-fPp"/>
                         <outlet property="locationDataTopCollectionView" destination="6E9-1y-cyD" id="zH0-iu-me9"/>
                         <outlet property="timeLocationData" destination="saJ-xd-KYy" id="udG-0Y-3vp"/>
