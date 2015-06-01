@@ -27,7 +27,7 @@
             </constraints>
             <size key="customSize" width="171" height="80"/>
             <connections>
-                <outlet property="title" destination="Ua7-kQ-oWr" id="nlf-tM-6dh"/>
+                <outlet property="title" destination="Ua7-kQ-oWr" id="XjD-Om-1Vn"/>
             </connections>
             <point key="canvasLocation" x="277.5" y="316"/>
         </collectionViewCell>

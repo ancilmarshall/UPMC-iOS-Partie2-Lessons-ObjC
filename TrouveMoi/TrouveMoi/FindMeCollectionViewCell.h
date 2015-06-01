@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface FindMeCollectionViewCell : UICollectionViewCell
-@property (weak, nonatomic) IBOutlet UILabel *title;
+@property (nonatomic,strong) NSString* text;
 @end

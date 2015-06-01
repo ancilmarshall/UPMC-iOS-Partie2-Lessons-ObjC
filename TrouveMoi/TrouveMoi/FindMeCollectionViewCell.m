@@ -8,6 +8,18 @@
 
 #import "FindMeCollectionViewCell.h"
 
+
+@interface FindMeCollectionViewCell()
+@property (weak, nonatomic) IBOutlet UILabel *title;
+@end
+
 @implementation FindMeCollectionViewCell
+
+//nice trick to use the setter on the text property
+//reduces a layer of abstraction when setting the cell's text
+-(void)setText:(NSString *)text;
+{
+    self.title.text = text;
+}
 
 @end

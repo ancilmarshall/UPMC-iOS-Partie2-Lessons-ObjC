@@ -11,8 +11,7 @@
 #import "FindMeViewController.h"
 #import "FindMeCollectionViewCell.h"
 
-static NSString* kTopCollectionViewCellReuseIdentifier = @"TopCollectionViewCell";
-static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionViewCell";
+static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
 
 @interface FindMeViewController ()  <UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CLLocationManagerDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *findMeButton;
@@ -20,13 +19,12 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
 @property (weak, nonatomic) IBOutlet UICollectionView *locationDataBottomCollectionView;
 @property (weak, nonatomic) IBOutlet UILabel *timeLocationData;
 @property (weak, nonatomic) IBOutlet UITextView *localisationData;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *localisationDataHeight;
 
 @property (nonatomic,strong) CLLocationManager* locationManager;
 @property (nonatomic,strong) CLLocation* currentLocation;
 @property (nonatomic,strong) CLHeading* currentHeading;
 @property (nonatomic,assign) BOOL updatingLocation;
-
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *localisationDataHeight;
 @property (nonatomic,strong) NSDateFormatter* dateFormatter;
 @end
 
@@ -36,13 +34,12 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
     [super viewDidLoad];
     
     //NOTE: collection view delegates and data sources are connected in IB
-    
     //Register nib to collection views
     [self.locationDataTopCollectionView registerNib:[UINib nibWithNibName:@"FindMeCollectionViewCell" bundle:nil]
-                         forCellWithReuseIdentifier:kTopCollectionViewCellReuseIdentifier];
+                         forCellWithReuseIdentifier:kCollectionViewCellReuseIdentifier];
     
     [self.locationDataBottomCollectionView registerNib:[UINib nibWithNibName:@"FindMeCollectionViewCell" bundle:nil]
-                            forCellWithReuseIdentifier:kBottomCollectionViewCellReuseIdentifier];
+                            forCellWithReuseIdentifier:kCollectionViewCellReuseIdentifier];
     
     //reset the views' background color from what was set in IB
     self.locationDataTopCollectionView.backgroundColor = [UIColor whiteColor];
@@ -50,22 +47,12 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
     self.localisationData.backgroundColor = [UIColor whiteColor];
     
     //reset the state and call [self resetUI]
-    [self stopLocationUpdates];
+    [self reset];
     
     self.dateFormatter = [NSDateFormatter new];
     self.dateFormatter.dateStyle = NSDateFormatterMediumStyle;
     self.dateFormatter.timeStyle = NSDateFormatterMediumStyle;
     
-}
-
-//lazy initialization of the location manager
--(CLLocationManager*)locationManager;
-{
-    if (_locationManager == nil){
-        _locationManager = [[CLLocationManager alloc] init];
-        _locationManager.delegate = self;
-    }
-    return _locationManager;
 }
 
 #pragma mark - Location Services
@@ -74,10 +61,17 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
     
     NSAssert(self.findMeButton == sender,@"Expected event source to be the findMe button");
     
+    //if already in updating mode, then reset the data and the ui
     if (self.updatingLocation == YES){
-        [self stopLocationUpdates];
+        [self reset];
         return;
     }
+    
+    //otherwise creat a new location manager
+    self.locationManager = [CLLocationManager new];
+    self.locationManager.distanceFilter = kCLLocationAccuracyBest;
+    self.locationManager.delegate = self;
+    
     
     if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse){
         [self startUpdatingLocation];
@@ -117,6 +111,7 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
             return;
             
         case kCLAuthorizationStatusAuthorizedWhenInUse:
+        case kCLAuthorizationStatusAuthorizedAlways:
             [self startUpdatingLocation];
             return;
             
@@ -138,8 +133,9 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
     [self.findMeButton setTitle:NSLocalizedString(@"Stop...", nil) forState:UIControlStateNormal];
 }
 
--(void)stopLocationUpdates;
+-(void)reset;
 {
+    self.locationManager.delegate = nil;
     [self.locationManager stopUpdatingLocation];
     
     if ([CLLocationManager headingAvailable]) {
@@ -177,6 +173,7 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
         self.timeLocationData.text = NSLocalizedString(@"Location date", nil);
     }
     
+    //TODO: This should not be hard coded, but rather varied based on the content
     if ([self isPortrait:size]){
         self.localisationDataHeight.constant = 100;
     }
@@ -186,11 +183,11 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
 
 }
 
+
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations;
 {
     self.currentLocation = locations[0];
     if (self.currentLocation != nil){
-        
         [self resetUI];
     }
 }
@@ -206,8 +203,7 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error;
 {
     [self resetUI];
-    NSString* text = NSLocalizedString(@"Error getting localisation data", nil);
-    [text stringByAppendingString:error.description];
+    NSString* text = [NSString stringWithFormat:NSLocalizedString(@"Error getting localisation data: %@", nil),error.description];
     self.localisationData.text = text;
 }
 
@@ -231,29 +227,22 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
     return 0;
 }
 
-- (FindMeCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+- (FindMeCollectionViewCell *)collectionView:(UICollectionView *)collectionView
+                      cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    FindMeCollectionViewCell* cell = nil;
+    FindMeCollectionViewCell* cell =[collectionView
+           dequeueReusableCellWithReuseIdentifier:kCollectionViewCellReuseIdentifier
+           forIndexPath:indexPath];
+    NSAssert(cell != nil, @"Expected to have a UICollectionViewCell");
+    //bc collection views always guarantees non-nil cells, unlike tableview
     
     if (collectionView == self.locationDataTopCollectionView){
-    
-        cell =[collectionView
-               dequeueReusableCellWithReuseIdentifier:kTopCollectionViewCellReuseIdentifier
-                                        forIndexPath:indexPath];
-        NSAssert( cell != nil, @"Expected to have a UICollectionViewCell");
-        //bc collection views always guarantees non-nil cells, unlike tableview
-
-        cell.title.text = [self topLocationDataLabels][indexPath.item];
-        
+        cell.text = [self topLocationDataLabels][indexPath.item];
     } else if (collectionView == self.locationDataBottomCollectionView) {
-        cell =[collectionView
-               dequeueReusableCellWithReuseIdentifier:kBottomCollectionViewCellReuseIdentifier
-                                         forIndexPath:indexPath];
-        NSAssert( cell != nil, @"Expected to have a UICollectionViewCell");
-        //bc collection views always guarantees non-nil cells, unlike tableview
-        
-        cell.title.text = [self bottomLocationDataLabels][indexPath.item];
+        cell.text = [self bottomLocationDataLabels][indexPath.item];
+    } else {
+        NSAssert(NO,NSLocalizedString(@"Unexpected collectionView",nil));
     }
     return cell;
 }
@@ -328,6 +317,5 @@ static NSString* kBottomCollectionViewCellReuseIdentifier = @"BottomCollectionVi
 {
     return size.height > size.width;
 }
-
 
 @end
