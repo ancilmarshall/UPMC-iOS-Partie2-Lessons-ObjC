@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1D8DBC7A1B1C97BA000E62FD /* FindMeMap2DViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D8DBC791B1C97BA000E62FD /* FindMeMap2DViewController.m */; };
+		1D8DBC7C1B1CB290000E62FD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D8DBC7B1B1CB290000E62FD /* MapKit.framework */; };
 		1DEB8B1B1AEE484500B5DA16 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DEB8B1A1AEE484500B5DA16 /* main.m */; };
 		1DEB8B1E1AEE484500B5DA16 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DEB8B1D1AEE484500B5DA16 /* AppDelegate.m */; };
 		1DEB8B211AEE484500B5DA16 /* FindMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1DEB8B201AEE484500B5DA16 /* FindMeViewController.m */; };
@@ -29,6 +31,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1D8DBC781B1C97BA000E62FD /* FindMeMap2DViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindMeMap2DViewController.h; sourceTree = "<group>"; };
+		1D8DBC791B1C97BA000E62FD /* FindMeMap2DViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindMeMap2DViewController.m; sourceTree = "<group>"; };
+		1D8DBC7B1B1CB290000E62FD /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		1DEB8B151AEE484500B5DA16 /* TrouveMoi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrouveMoi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DEB8B191AEE484500B5DA16 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1DEB8B1A1AEE484500B5DA16 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -52,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1D8DBC7C1B1CB290000E62FD /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,6 +74,7 @@
 		1DEB8B0C1AEE484500B5DA16 = {
 			isa = PBXGroup;
 			children = (
+				1D8DBC7B1B1CB290000E62FD /* MapKit.framework */,
 				1DEB8B171AEE484500B5DA16 /* TrouveMoi */,
 				1DEB8B311AEE484500B5DA16 /* TrouveMoiTests */,
 				1DEB8B161AEE484500B5DA16 /* Products */,
@@ -91,6 +98,8 @@
 				1DEB8B1F1AEE484500B5DA16 /* FindMeViewController.h */,
 				1DEB8B201AEE484500B5DA16 /* FindMeViewController.m */,
 				1DEB8B3E1AEEA53600B5DA16 /* FindMeCollectionViewCell.h */,
+				1D8DBC781B1C97BA000E62FD /* FindMeMap2DViewController.h */,
+				1D8DBC791B1C97BA000E62FD /* FindMeMap2DViewController.m */,
 				1DEB8B3F1AEEA53600B5DA16 /* FindMeCollectionViewCell.m */,
 				1DEB8B401AEEA53600B5DA16 /* FindMeCollectionViewCell.xib */,
 				1DEB8B221AEE484500B5DA16 /* Main.storyboard */,
@@ -230,6 +239,7 @@
 			files = (
 				1DEB8B211AEE484500B5DA16 /* FindMeViewController.m in Sources */,
 				1DEB8B1E1AEE484500B5DA16 /* AppDelegate.m in Sources */,
+				1D8DBC7A1B1C97BA000E62FD /* FindMeMap2DViewController.m in Sources */,
 				1DEB8B1B1AEE484500B5DA16 /* main.m in Sources */,
 				1DEB8B411AEEA53600B5DA16 /* FindMeCollectionViewCell.m in Sources */,
 			);
@@ -428,6 +438,7 @@
 				1DEB8B3A1AEE484500B5DA16 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1DEB8B3B1AEE484500B5DA16 /* Build configuration list for PBXNativeTarget "TrouveMoiTests" */ = {
 			isa = XCConfigurationList;
@@ -436,6 +447,7 @@
 				1DEB8B3D1AEE484500B5DA16 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

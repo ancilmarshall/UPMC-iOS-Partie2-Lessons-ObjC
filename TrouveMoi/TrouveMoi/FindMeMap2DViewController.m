@@ -1,34 +1,36 @@
 //
-//  ViewController.m
+//  FindMeMap2DViewController.m
 //  TrouveMoi
 //
-//  Created by Ancil on 4/27/15.
+//  Created by Ancil on 6/1/15.
 //  Copyright (c) 2015 Ancil Marshall. All rights reserved.
 //
 
 #import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
 
-#import "FindMeViewController.h"
+#import "FindMeMap2DViewController.h"
 #import "FindMeCollectionViewCell.h"
 
 static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
 
-@interface FindMeViewController ()  <UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,CLLocationManagerDelegate>
+@interface FindMeMap2DViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,
+    CLLocationManagerDelegate,MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *findMeButton;
 @property (weak, nonatomic) IBOutlet UICollectionView *locationDataTopCollectionView;
-@property (weak, nonatomic) IBOutlet UICollectionView *locationDataBottomCollectionView;
 @property (weak, nonatomic) IBOutlet UILabel *timeLocationData;
 @property (weak, nonatomic) IBOutlet UITextView *localisationData;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *localisationDataHeight;
+@property (weak, nonatomic) IBOutlet MKMapView* map;
 
 @property (nonatomic,strong) CLLocationManager* locationManager;
 @property (nonatomic,strong) CLLocation* currentLocation;
-@property (nonatomic,strong) CLHeading* currentHeading;
-@property (nonatomic,assign) BOOL updatingLocation;
 @property (nonatomic,strong) NSDateFormatter* dateFormatter;
+@property (nonatomic,assign) BOOL updatingLocation;
+
 @end
 
-@implementation FindMeViewController
+@implementation FindMeMap2DViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -38,12 +40,8 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
     [self.locationDataTopCollectionView registerNib:[UINib nibWithNibName:@"FindMeCollectionViewCell" bundle:nil]
                          forCellWithReuseIdentifier:kCollectionViewCellReuseIdentifier];
     
-    [self.locationDataBottomCollectionView registerNib:[UINib nibWithNibName:@"FindMeCollectionViewCell" bundle:nil]
-                            forCellWithReuseIdentifier:kCollectionViewCellReuseIdentifier];
-    
     //reset the views' background color from what was set in IB
     self.locationDataTopCollectionView.backgroundColor = [UIColor whiteColor];
-    self.locationDataBottomCollectionView.backgroundColor = [UIColor whiteColor];
     self.localisationData.backgroundColor = [UIColor whiteColor];
     
     //reset the state and call [self resetUI]
@@ -52,6 +50,15 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
     self.dateFormatter = [NSDateFormatter new];
     self.dateFormatter.dateStyle = NSDateFormatterMediumStyle;
     self.dateFormatter.timeStyle = NSDateFormatterMediumStyle;
+    
+    //mapview
+    self.map.mapType = MKMapTypeStandard;
+    self.map.zoomEnabled = YES;
+    self.map.scrollEnabled = YES;
+    self.map.rotateEnabled = YES;
+    self.map.pitchEnabled = NO;
+    
+    self.map.delegate = self;
     
 }
 
@@ -104,7 +111,7 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
         case kCLAuthorizationStatusDenied:
         case kCLAuthorizationStatusRestricted:
             return;
-        
+            
         case kCLAuthorizationStatusNotDetermined:
             [self.locationManager requestWhenInUseAuthorization];
             return;
@@ -124,10 +131,6 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
     [self.locationManager startUpdatingLocation];
     self.updatingLocation = YES;
     
-    if ([CLLocationManager headingAvailable]){
-        [self.locationManager startUpdatingHeading];
-    }
-    
     self.localisationData.text = NSLocalizedString(@"Searching ...", nil);
     [self.findMeButton setTitle:NSLocalizedString(@"Stop...", nil) forState:UIControlStateNormal];
 }
@@ -144,8 +147,7 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
     self.updatingLocation = NO;
     self.locationManager = nil;
     self.currentLocation = nil;
-    self.currentHeading = nil;
-
+    
     [self.findMeButton setTitle:NSLocalizedString(@"Find Me", nil) forState:UIControlStateNormal];
     
     [self resetUI];
@@ -160,7 +162,6 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
 // size is an optional parameter
 -(void)resetUIForSize:(CGSize)size;
 {
-    [self.locationDataBottomCollectionView reloadData];
     [self.locationDataTopCollectionView reloadData];
     
     if (self.updatingLocation){
@@ -181,18 +182,11 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
     }
 }
 
+
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations;
 {
     self.currentLocation = locations[0];
     if (self.currentLocation != nil){
-        [self resetUI];
-    }
-}
-
--(void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading;
-{
-    self.currentHeading = newHeading;
-    if (self.currentHeading != nil){
         [self resetUI];
     }
 }
@@ -203,6 +197,12 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
     NSString* text = [NSString stringWithFormat:NSLocalizedString(@"Error getting localisation data: %@", nil),error.description];
     self.localisationData.text = text;
 }
+
+
+# pragma mark - Add Pin
+- (IBAction)addPin:(UIButton *)sender {
+}
+
 
 # pragma mark - Collection View Data Source
 
@@ -217,9 +217,6 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
     if (collectionView == self.locationDataTopCollectionView){
         return [[self topLocationDataLabels] count];
     }
-    else if (collectionView == self.locationDataBottomCollectionView){
-        return [[self bottomLocationDataLabels] count];
-    }
     else {
         NSAssert(NO,NSLocalizedString(@"Unexpected collectionView",nil));
     }
@@ -231,15 +228,13 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
 {
     
     FindMeCollectionViewCell* cell =[collectionView
-           dequeueReusableCellWithReuseIdentifier:kCollectionViewCellReuseIdentifier
-           forIndexPath:indexPath];
+                                     dequeueReusableCellWithReuseIdentifier:kCollectionViewCellReuseIdentifier
+                                     forIndexPath:indexPath];
     NSAssert(cell != nil, @"Expected to have a UICollectionViewCell");
     //bc collection views always guarantees non-nil cells, unlike tableview
     
     if (collectionView == self.locationDataTopCollectionView){
         cell.text = [self topLocationDataLabels][indexPath.item];
-    } else if (collectionView == self.locationDataBottomCollectionView) {
-        cell.text = [self bottomLocationDataLabels][indexPath.item];
     } else {
         NSAssert(NO,NSLocalizedString(@"Unexpected collectionView",nil));
     }
@@ -253,7 +248,7 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CGFloat height = 50.0f;
-    CGFloat width = (self.locationDataTopCollectionView.frame.size.width / 2.0f)-8.0f;
+    CGFloat width = (self.locationDataTopCollectionView.frame.size.width / 2.0f)-16.0f;
     //NOTE: needed this offset of 8.0f to work when embedded in a tab controller. Don't know why?
     CGSize size =  (CGSize){.width = width, .height=height};
     return size;
@@ -263,42 +258,18 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
 
 -(NSArray*)topLocationDataLabels;
 {
- 
-    if (self.currentLocation == nil){
     
+    if (self.currentLocation == nil){
+        
         return @[ NSLocalizedString(@"Lat: ---",nil),
-                  NSLocalizedString(@"Long: ---", nil),
-                  NSLocalizedString(@"Alt: ---", nil),
-                  NSLocalizedString(@"Speed: ---", nil)];
+                  NSLocalizedString(@"Long: ---", nil)];
     }
     
     NSMutableArray* dataLabelsArray = [NSMutableArray new];
     [dataLabelsArray addObject:[NSString stringWithFormat:@"Lat: %.3f",self.currentLocation.coordinate.latitude]];
     [dataLabelsArray addObject:[NSString stringWithFormat:@"Long: %.3f",self.currentLocation.coordinate.longitude]];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"Alt: %.3f",self.currentLocation.altitude]];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"Speed: %.3f",self.currentLocation.speed]];
     
     return [NSArray arrayWithArray:dataLabelsArray];;
-}
-
--(NSArray*)bottomLocationDataLabels;
-{
-    
-    if (self.currentHeading == nil){
-        return @[ NSLocalizedString(@"Heading T: ---", nil),
-                  NSLocalizedString(@"Heading M: ---",nil),
-                  NSLocalizedString(@"x-comp: ---", nil),
-                  NSLocalizedString(@"y-comp: ---", nil)];
-    }
-    
-    NSMutableArray* dataLabelsArray = [NSMutableArray new];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"Heading T:%.3f",self.currentHeading.trueHeading]];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"Heading M: %.3f",self.currentHeading.magneticHeading]];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"x-comp: %.3f",self.currentHeading.x]];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"y-comp: %.3f",self.currentHeading.y]];
-    
-    return [NSArray arrayWithArray:dataLabelsArray];
-    
 }
 
 #pragma mark - Rotation support
@@ -316,5 +287,7 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
 {
     return size.height > size.width;
 }
+
+
 
 @end
