@@ -205,6 +205,9 @@
                             </textView>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="0mY-FI-isH">
                                 <rect key="frame" x="16" y="241" width="568" height="310"/>
+                                <connections>
+                                    <outlet property="delegate" destination="prn-fb-y8w" id="yJV-ta-RME"/>
+                                </connections>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

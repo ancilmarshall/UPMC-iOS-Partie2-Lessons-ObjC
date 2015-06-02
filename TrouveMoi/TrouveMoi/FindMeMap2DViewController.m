@@ -13,6 +13,7 @@
 #import "FindMeCollectionViewCell.h"
 
 static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
+static NSUInteger counter = 1;
 
 @interface FindMeMap2DViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,
     CLLocationManagerDelegate,MKMapViewDelegate>
@@ -57,8 +58,6 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
     self.map.scrollEnabled = YES;
     self.map.rotateEnabled = YES;
     self.map.pitchEnabled = NO;
-    
-    self.map.delegate = self;
     
 }
 
@@ -180,8 +179,28 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
     else {
         self.localisationDataHeight.constant = 50;
     }
+    [self resetMap];
 }
 
+-(void)resetMap;
+{
+    
+    if (self.currentLocation != nil & self.updatingLocation == YES){
+        CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(
+                                        self.currentLocation.coordinate.latitude,
+                                        self.currentLocation.coordinate.longitude);
+        MKCoordinateSpan span = MKCoordinateSpanMake(0.035, 0.035);
+        MKCoordinateRegion region = MKCoordinateRegionMake(coord, span);
+        [self.map setRegion:region animated:YES];
+        self.map.showsUserLocation = YES;
+        [self.map setNeedsDisplay];
+    }
+    else {
+        self.map.showsUserLocation = NO;
+        [self.map setNeedsDisplay];
+    }
+    
+}
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations;
 {
@@ -199,8 +218,28 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
 }
 
 
-# pragma mark - Add Pin
+# pragma mark -  Pin Annotation View
 - (IBAction)addPin:(UIButton *)sender {
+    
+    MKPointAnnotation* annotation = [MKPointAnnotation new];
+    annotation.title = [NSString stringWithFormat:@"Point %tu",counter++];
+    annotation.coordinate = [self.map centerCoordinate];
+    [self.map addAnnotation:annotation];
+}
+
+- (MKAnnotationView*)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+{
+    if (annotation==[mapView userLocation]){
+        return nil;
+    }
+    
+    MKPinAnnotationView* pin = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"pinAnnotationView"];
+    pin.pinColor = MKPinAnnotationColorPurple;
+    pin.canShowCallout = YES;
+    pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    pin.animatesDrop = YES;
+
+    return pin;
 }
 
 
