@@ -23,6 +23,7 @@ static NSUInteger counter = 1;
 @property (weak, nonatomic) IBOutlet UITextView *localisationData;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *localisationDataHeight;
 @property (weak, nonatomic) IBOutlet MKMapView* map;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *mapTypePicker;
 
 @property (nonatomic,strong) CLLocationManager* locationManager;
 @property (nonatomic,strong) CLLocation* currentLocation;
@@ -52,12 +53,13 @@ static NSUInteger counter = 1;
     self.dateFormatter.dateStyle = NSDateFormatterMediumStyle;
     self.dateFormatter.timeStyle = NSDateFormatterMediumStyle;
     
-    //mapview
+    //mapview ( the delegate is connected in the IB )
     self.map.mapType = MKMapTypeStandard;
     self.map.zoomEnabled = YES;
     self.map.scrollEnabled = YES;
     self.map.rotateEnabled = YES;
     self.map.pitchEnabled = NO;
+    self.mapTypePicker.selectedSegmentIndex = 0;
     
 }
 
@@ -65,7 +67,8 @@ static NSUInteger counter = 1;
 
 - (IBAction)findLocation:(UIButton *)sender {
     
-    NSAssert(self.findMeButton == sender,@"Expected event source to be the findMe button");
+    NSAssert(self.findMeButton == sender,
+             NSLocalizedString(@"Expected event source to be the findMe button",nil));
     
     //if already in updating mode, then reset the data and the ui
     if (self.updatingLocation == YES){
@@ -103,7 +106,8 @@ static NSUInteger counter = 1;
 //This delegate is called after the requestWhenInUseAuthorization returns the results from the user
 -(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status;
 {
-    NSAssert(manager == self.locationManager,NSLocalizedString(@"Expected event's manager to be self.locationManager",nil));
+    NSAssert(manager == self.locationManager,
+             NSLocalizedString(@"Expected event's manager to be self.locationManager",nil));
     
     switch (status) {
             
@@ -217,7 +221,6 @@ static NSUInteger counter = 1;
     self.localisationData.text = text;
 }
 
-
 # pragma mark -  Pin Annotation View
 - (IBAction)addPin:(UIButton *)sender {
     
@@ -242,6 +245,27 @@ static NSUInteger counter = 1;
     return pin;
 }
 
+- (IBAction)changeMapType:(UISegmentedControl *)sender {
+    NSAssert(sender == self.mapTypePicker,
+             NSLocalizedString(@"Expected event sender to by the mapTypePicker segmented control button",nil));
+    
+    switch (sender.selectedSegmentIndex) {
+        case 0:
+            self.map.mapType = MKMapTypeStandard;
+            break;
+            
+        case 1:
+            self.map.mapType = MKMapTypeSatellite;
+            break;
+            
+        case 2:
+            self.map.mapType = MKMapTypeHybrid;
+            break;
+            
+        default:
+            break;
+    }
+}
 
 # pragma mark - Collection View Data Source
 
@@ -269,7 +293,7 @@ static NSUInteger counter = 1;
     FindMeCollectionViewCell* cell =[collectionView
                                      dequeueReusableCellWithReuseIdentifier:kCollectionViewCellReuseIdentifier
                                      forIndexPath:indexPath];
-    NSAssert(cell != nil, @"Expected to have a UICollectionViewCell");
+    NSAssert(cell != nil, NSLocalizedString(@"Expected to have a UICollectionViewCell",nil));
     //bc collection views always guarantees non-nil cells, unlike tableview
     
     if (collectionView == self.locationDataTopCollectionView){

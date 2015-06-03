@@ -59,7 +59,7 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
 
 - (IBAction)findLocation:(UIButton *)sender {
     
-    NSAssert(self.findMeButton == sender,@"Expected event source to be the findMe button");
+    NSAssert(self.findMeButton == sender,NSLocalizedString(@"Expected event source to be the findMe button",nil));
     
     //if already in updating mode, then reset the data and the ui
     if (self.updatingLocation == YES){
@@ -200,7 +200,8 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error;
 {
     [self resetUI];
-    NSString* text = [NSString stringWithFormat:NSLocalizedString(@"Error getting localisation data: %@", nil),error.description];
+    NSString* text = [NSString stringWithFormat:
+                      NSLocalizedString(@"Error getting localisation data: %@", nil),error.description];
     self.localisationData.text = text;
 }
 
@@ -233,7 +234,7 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
     FindMeCollectionViewCell* cell =[collectionView
            dequeueReusableCellWithReuseIdentifier:kCollectionViewCellReuseIdentifier
            forIndexPath:indexPath];
-    NSAssert(cell != nil, @"Expected to have a UICollectionViewCell");
+    NSAssert(cell != nil, NSLocalizedString(@"Expected to have a UICollectionViewCell",nil));
     //bc collection views always guarantees non-nil cells, unlike tableview
     
     if (collectionView == self.locationDataTopCollectionView){
@@ -273,10 +274,14 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
     }
     
     NSMutableArray* dataLabelsArray = [NSMutableArray new];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"Lat: %.3f",self.currentLocation.coordinate.latitude]];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"Long: %.3f",self.currentLocation.coordinate.longitude]];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"Alt: %.3f",self.currentLocation.altitude]];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"Speed: %.3f",self.currentLocation.speed]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:
+        NSLocalizedString(@"Lat: %.3f",nil),self.currentLocation.coordinate.latitude]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:
+        NSLocalizedString(@"Long: %.3f",nil),self.currentLocation.coordinate.longitude]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:
+        NSLocalizedString(@"Alt: %.3f",nil),self.currentLocation.altitude]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:
+        NSLocalizedString(@"Speed: %.3f",nil),self.currentLocation.speed]];
     
     return [NSArray arrayWithArray:dataLabelsArray];;
 }
@@ -292,10 +297,14 @@ static NSString* kCollectionViewCellReuseIdentifier = @"CollectionViewCell";
     }
     
     NSMutableArray* dataLabelsArray = [NSMutableArray new];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"Heading T:%.3f",self.currentHeading.trueHeading]];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"Heading M: %.3f",self.currentHeading.magneticHeading]];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"x-comp: %.3f",self.currentHeading.x]];
-    [dataLabelsArray addObject:[NSString stringWithFormat:@"y-comp: %.3f",self.currentHeading.y]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:
+        NSLocalizedString(@"Heading T:%.3f",nil),self.currentHeading.trueHeading]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:
+        NSLocalizedString(@"Heading M: %.3f",nil),self.currentHeading.magneticHeading]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:
+        NSLocalizedString(@"x-comp: %.3f",nil),self.currentHeading.x]];
+    [dataLabelsArray addObject:[NSString stringWithFormat:
+        NSLocalizedString(@"y-comp: %.3f",nil),self.currentHeading.y]];
     
     return [NSArray arrayWithArray:dataLabelsArray];
     

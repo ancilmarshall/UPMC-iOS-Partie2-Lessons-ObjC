@@ -116,7 +116,7 @@
                             <constraint firstItem="6E9-1y-cyD" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="smM-WS-Sbx"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="Cop-qz-icY"/>
+                    <tabBarItem key="tabBarItem" title="Location" id="Cop-qz-icY"/>
                     <connections>
                         <outlet property="findMeButton" destination="2GB-yf-StR" id="ePs-VO-GaT"/>
                         <outlet property="localisationData" destination="Os2-lT-w5y" id="xNu-7u-52z"/>
@@ -209,15 +209,29 @@
                                     <outlet property="delegate" destination="prn-fb-y8w" id="yJV-ta-RME"/>
                                 </connections>
                             </mapView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rS0-T1-r7X">
+                                <rect key="frame" x="196" y="256" width="209" height="29"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <segments>
+                                    <segment title="Standard"/>
+                                    <segment title="Satellite"/>
+                                    <segment title="Hybrid"/>
+                                </segments>
+                                <connections>
+                                    <action selector="changeMapType:" destination="prn-fb-y8w" eventType="valueChanged" id="ezP-4t-avv"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="m8V-yt-bDp" firstAttribute="trailing" secondItem="hYT-Yu-MHv" secondAttribute="trailingMargin" id="1Be-dA-wnO"/>
                             <constraint firstItem="0mY-FI-isH" firstAttribute="top" secondItem="Ie2-JT-UiT" secondAttribute="bottom" constant="8" id="1hn-Pj-XCh"/>
                             <constraint firstItem="ns6-OB-C64" firstAttribute="top" secondItem="q2p-3P-qj9" secondAttribute="bottom" constant="8" id="4mB-sb-knd"/>
+                            <constraint firstItem="rS0-T1-r7X" firstAttribute="centerX" secondItem="0mY-FI-isH" secondAttribute="centerX" constant="0.5" id="8hT-Qs-zPg"/>
                             <constraint firstItem="Ie2-JT-UiT" firstAttribute="leading" secondItem="hYT-Yu-MHv" secondAttribute="leadingMargin" id="9Zl-Pv-m2z"/>
                             <constraint firstItem="Ie2-JT-UiT" firstAttribute="trailing" secondItem="hYT-Yu-MHv" secondAttribute="trailingMargin" id="BcT-Qx-FUb"/>
                             <constraint firstAttribute="centerX" secondItem="bZ5-T2-IWd" secondAttribute="centerX" id="CcU-yJ-tSX"/>
+                            <constraint firstItem="0mY-FI-isH" firstAttribute="top" secondItem="rS0-T1-r7X" secondAttribute="bottom" constant="-43" id="FcT-73-GbQ"/>
                             <constraint firstItem="y3V-Au-3Cb" firstAttribute="top" secondItem="0mY-FI-isH" secondAttribute="bottom" id="InN-DJ-5hW"/>
                             <constraint firstItem="4cB-r7-peg" firstAttribute="top" secondItem="ns6-OB-C64" secondAttribute="bottom" constant="8" id="JWm-Pm-aHA"/>
                             <constraint firstItem="bZ5-T2-IWd" firstAttribute="top" secondItem="4cB-r7-peg" secondAttribute="bottom" constant="8" id="OQB-TV-4hk"/>
@@ -231,13 +245,14 @@
                             <constraint firstItem="m8V-yt-bDp" firstAttribute="centerY" secondItem="ns6-OB-C64" secondAttribute="centerY" id="zid-8Q-kDo"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item 2" id="646-rh-dUB"/>
+                    <tabBarItem key="tabBarItem" title="2D Map" id="646-rh-dUB"/>
                     <connections>
                         <outlet property="findMeButton" destination="ns6-OB-C64" id="NC3-uw-K7I"/>
                         <outlet property="localisationData" destination="Ie2-JT-UiT" id="TXp-kj-tu8"/>
                         <outlet property="localisationDataHeight" destination="Obb-YK-9hG" id="KGa-BC-BL7"/>
                         <outlet property="locationDataTopCollectionView" destination="4cB-r7-peg" id="l1c-Nu-jEJ"/>
                         <outlet property="map" destination="0mY-FI-isH" id="GYl-H9-rDW"/>
+                        <outlet property="mapTypePicker" destination="rS0-T1-r7X" id="u9m-ok-gXB"/>
                         <outlet property="timeLocationData" destination="bZ5-T2-IWd" id="RTH-Fx-aBb"/>
                     </connections>
                 </viewController>
