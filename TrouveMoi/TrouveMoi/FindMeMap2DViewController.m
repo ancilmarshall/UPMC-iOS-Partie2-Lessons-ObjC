@@ -29,6 +29,7 @@ static NSUInteger counter = 1;
 @property (nonatomic,strong) CLLocation* currentLocation;
 @property (nonatomic,strong) NSDateFormatter* dateFormatter;
 @property (nonatomic,assign) BOOL updatingLocation;
+@property (nonatomic,assign) BOOL reinitMapAboutUserLocation;
 
 @end
 
@@ -60,6 +61,7 @@ static NSUInteger counter = 1;
     self.map.rotateEnabled = YES;
     self.map.pitchEnabled = NO;
     self.mapTypePicker.selectedSegmentIndex = 0;
+    self.reinitMapAboutUserLocation = YES;
     
 }
 
@@ -80,6 +82,8 @@ static NSUInteger counter = 1;
     self.locationManager = [CLLocationManager new];
     self.locationManager.distanceFilter = kCLLocationAccuracyBest;
     self.locationManager.delegate = self;
+    
+    self.reinitMapAboutUserLocation = YES;
     
     if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse){
         [self startUpdatingLocation];
@@ -188,22 +192,28 @@ static NSUInteger counter = 1;
 
 -(void)resetMap;
 {
-    
-    if (self.currentLocation != nil & self.updatingLocation == YES){
-        CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(
-                                        self.currentLocation.coordinate.latitude,
-                                        self.currentLocation.coordinate.longitude);
-        MKCoordinateSpan span = MKCoordinateSpanMake(0.035, 0.035);
-        MKCoordinateRegion region = MKCoordinateRegionMake(coord, span);
-        [self.map setRegion:region animated:YES];
+    if (self.currentLocation != nil){
+        if (self.reinitMapAboutUserLocation == YES){ //flag used to reinit displayed region
+            CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(
+                                            self.currentLocation.coordinate.latitude,
+                                            self.currentLocation.coordinate.longitude);
+            MKCoordinateSpan span = MKCoordinateSpanMake(0.035, 0.035);
+            MKCoordinateRegion region = MKCoordinateRegionMake(coord, span);
+            [self.map setRegion:region animated:YES];
+        }
         self.map.showsUserLocation = YES;
-        [self.map setNeedsDisplay];
     }
     else {
         self.map.showsUserLocation = NO;
-        [self.map setNeedsDisplay];
     }
+    [self.map setNeedsDisplay];
+    self.reinitMapAboutUserLocation = NO;
     
+}
+
+- (IBAction)reinitMap:(UIBarButtonItem *)sender {
+    self.reinitMapAboutUserLocation = YES;
+    [self resetMap];
 }
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations;

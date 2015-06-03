@@ -153,9 +153,6 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m8V-yt-bDp">
                                 <rect key="frame" x="562" y="32" width="22" height="22"/>
-                                <state key="normal">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
                                 <connections>
                                     <action selector="addPin:" destination="prn-fb-y8w" eventType="touchUpInside" id="ADr-bY-FWq"/>
                                 </connections>
@@ -221,6 +218,19 @@
                                     <action selector="changeMapType:" destination="prn-fb-y8w" eventType="valueChanged" id="ezP-4t-avv"/>
                                 </connections>
                             </segmentedControl>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gMP-Nz-LwK">
+                                <rect key="frame" x="534" y="507" width="50" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="Sm9-mH-TW2"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem systemItem="refresh" id="iyY-pW-JVk">
+                                        <connections>
+                                            <action selector="reinitMap:" destination="prn-fb-y8w" id="oBU-cm-z0u"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -238,8 +248,10 @@
                             <constraint firstItem="0mY-FI-isH" firstAttribute="trailing" secondItem="hYT-Yu-MHv" secondAttribute="trailingMargin" id="Rjg-x9-C33"/>
                             <constraint firstItem="Ie2-JT-UiT" firstAttribute="top" secondItem="bZ5-T2-IWd" secondAttribute="bottom" constant="8" id="Sp5-Sf-rPC"/>
                             <constraint firstAttribute="centerX" secondItem="ns6-OB-C64" secondAttribute="centerX" id="Wh5-EF-aMr"/>
+                            <constraint firstItem="gMP-Nz-LwK" firstAttribute="trailing" secondItem="hYT-Yu-MHv" secondAttribute="trailingMargin" id="g5e-Ji-xkG"/>
                             <constraint firstItem="0mY-FI-isH" firstAttribute="leading" secondItem="hYT-Yu-MHv" secondAttribute="leadingMargin" id="gUO-q8-AOH"/>
                             <constraint firstItem="4cB-r7-peg" firstAttribute="trailing" secondItem="hYT-Yu-MHv" secondAttribute="trailingMargin" id="ggd-0k-0ag"/>
+                            <constraint firstItem="y3V-Au-3Cb" firstAttribute="top" secondItem="gMP-Nz-LwK" secondAttribute="bottom" id="lXc-gP-nkI"/>
                             <constraint firstItem="4cB-r7-peg" firstAttribute="leading" secondItem="hYT-Yu-MHv" secondAttribute="leadingMargin" id="mh8-yD-AeP"/>
                             <constraint firstAttribute="centerX" secondItem="Ie2-JT-UiT" secondAttribute="centerX" id="uYJ-zd-gr8"/>
                             <constraint firstItem="m8V-yt-bDp" firstAttribute="centerY" secondItem="ns6-OB-C64" secondAttribute="centerY" id="zid-8Q-kDo"/>
