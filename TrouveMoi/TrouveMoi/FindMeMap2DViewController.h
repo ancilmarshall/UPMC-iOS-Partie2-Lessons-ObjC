@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FindMeViewController.h"
 
-@interface FindMeMap2DViewController : UIViewController
+@interface FindMeMap2DViewController : FindMeViewController
 
 @end
